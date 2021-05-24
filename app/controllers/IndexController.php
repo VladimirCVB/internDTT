@@ -4,8 +4,11 @@ use Phalcon\Mvc\Controller;
 
 class IndexController extends Controller
 {
+    /**
+     * Welcome and user list
+     */
     public function indexAction()
     {
-        return '<h1>Hello!</h1>';
+        $this->view->users = Users::find();
     }
 }

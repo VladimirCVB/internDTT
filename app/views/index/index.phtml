@@ -1,7 +1,34 @@
-<div class="page-header">
-    <h1>Congratulations!</h1>
-</div>
+<?php
 
-<p>You're now flying with Phalcon. Great things are about to happen!</p>
+echo "<h1>Hello!</h1>";
 
-<p>This page is located at <code>views/index/index.phtml</code></p>
+echo $this->tag->linkTo(["signup", "Sign Up Here!", 'class' => 'btn btn-primary']);
+
+if ($users->count() > 0) {
+    ?>
+    <br />
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="3">Users quantity: <?php echo $users->count(); ?></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <?php foreach ($users as $user) { ?>
+            <tr>
+                <td><?php echo $user->id; ?></td>
+                <td><?php echo $user->name; ?></td>
+                <td><?php echo $user->email; ?></td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+    <?php
+}
