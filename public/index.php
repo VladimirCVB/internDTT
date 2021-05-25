@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Micro;
 
 error_reporting(E_ALL);
 
