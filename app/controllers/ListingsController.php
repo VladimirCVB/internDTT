@@ -28,19 +28,19 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
 
-            // Check whether the request was made with Ajax ( $request->isAjax() )
+            $query = $this
+                ->modelsManager
+                ->createQuery(
+                    'SELECT * FROM users'
+                    );
 
-            // Use Model for database Query
-            $returnData = [
-                "name" => "Gay",
-                "youtube" => "https://www.youtube.com/channel/UCfd4AN4UKiWyHDdq-fizQGA"
-            ];
+            $users = $query->execute();
 
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData ]);
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $users ]);
 
         } else {
 
@@ -58,55 +58,197 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
     public function getAllFilterAction()
     {
-
+        // Disable View File Content
         $this->view->disable();
 
+        // Getting a response instance
+        // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
+
+        // Getting a request instance
+        // https://docs.phalcon.io/3.4/en/request
         $request = new Request();
 
-        $userId = $this->request->getQuery('id', 'int');
-        $query     = $this
-            ->modelsManager
-            ->createQuery(
-                'SELECT * FROM Users WHERE id = :id:'
-            )
-        ;
+        // Check whether the request was made with method GET ( $this->request->isGet() )
+        if ($request->isGet()) {
 
-        $users = $query->execute(
-            [
-                'id' => $userId,
-            ]
-        );
+            // $userId = $request->getPost();
+            // $query     = $this
+            //     ->modelsManager
+            //     ->createQuery(
+            //         'SELECT * FROM Users WHERE id = :id:'
+            //     )
+            // ;
+    
+            // $users = $query->execute(
+            //     [
+            //         'id' => $userId,
+            //     ]
+            // );
+            $userId = $request->getQuery('id');
+            $user = Users::findFirst("id = '$userId'");
 
-        // $query = $this
-        //     ->modelsManager
-        //     ->createQuery(
-        //         'SELECT * FROM users'
-        //     )
-        // ;
+            // Set status code
+            $response->setStatusCode(200, 'OK');
 
-        // $users = $query->execute();
+            // Set the content of the response
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $user ]);
 
-        $response->setStatusCode(200, 'OK');
+        } else {
 
-        // Set the content of the response
-        $response->setJsonContent(["status" => true, "error" => false, "data" => $users ]);
+            // Set status code
+            $response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            // $response->setContent("Sorry, the page doesn't exist");
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
         $response->send();
     }
 
     public function postAction()
     {
-        return '<h1>Happy marriage</h1>';
+        // Disable View File Content
+        $this->view->disable();
+
+        // Getting a response instance
+        // https://docs.phalcon.io/3.4/en/response.html
+        $response = new Response();
+
+        // Getting a request instance
+        // https://docs.phalcon.io/3.4/en/request
+        $request = new Request();
+
+        // Check whether the request was made with method GET ( $this->request->isGet() )
+        if ($request->isPost()) {
+
+            $user = new Users();
+
+            //assign value from the form to $user
+            $user->assign(
+                $this->request->getPost(),
+                [
+                    'name',
+                    'email',
+                    'user_type',
+                    'password'
+                ]
+            );
+
+            // Store and check for errors
+            $success = $user->save();
+
+            if ($success) {
+                $message = "Thanks for registering!";
+            } else {
+                $message = "Sorry, the following problems were generated:<br>"
+                        . implode('<br>', $user->getMessages());
+            }
+
+            // Set status code
+            $response->setStatusCode(200, 'OK');
+
+            // Set the content of the response
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $message ]);
+
+        } else {
+
+            // Set status code
+            $response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            // $response->setContent("Sorry, the page doesn't exist");
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
+        $response->send();
     }
 
     public function putAction()
     {
-        return '<h1>Happy marriage</h1>';
+        // Disable View File Content
+        $this->view->disable();
+
+        // Getting a response instance
+        // https://docs.phalcon.io/3.4/en/response.html
+        $response = new Response();
+
+        // Getting a request instance
+        // https://docs.phalcon.io/3.4/en/request
+        $request = new Request();
+
+        // Check whether the request was made with method GET ( $this->request->isGet() )
+        if ($request->isPut()) {
+
+            $user = Users::findFirst("id=2");
+
+            $user->password = "Biomass";
+
+            $user->update();
+            
+            // Set status code
+            $response->setStatusCode(200, 'OK');
+
+            // Set the content of the response
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $user->email ]);
+
+        } else {
+
+            // Set status code
+            $response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            // $response->setContent("Sorry, the page doesn't exist");
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
+        $response->send();
     }
 
     public function deleteAction()
     {
-        return '<h1>Happy marriage</h1>';
+        // Disable View File Content
+        $this->view->disable();
+
+        // Getting a response instance
+        // https://docs.phalcon.io/3.4/en/response.html
+        $response = new Response();
+
+        // Getting a request instance
+        // https://docs.phalcon.io/3.4/en/request
+        $request = new Request();
+
+        // Check whether the request was made with method GET ( $this->request->isGet() )
+        if ($request->isDelete()) {
+
+            $user = Users::findFirst("id=1");
+
+            $user->name = "Biomass";
+
+            $user->delete();
+            
+            // Set status code
+            $response->setStatusCode(200, 'OK');
+
+            // Set the content of the response
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $user ]);
+
+        } else {
+
+            // Set status code
+            $response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            // $response->setContent("Sorry, the page doesn't exist");
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
+        $response->send();
     }
 
     //admin
