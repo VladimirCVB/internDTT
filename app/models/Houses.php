@@ -15,10 +15,12 @@ class Houses extends Model
     public $zipcode;
     public $city;
 
+    //Adding validator for specific fields
     public function validation()
     {
         $validator = new Validation();
 
+        //Validating 'number' field to only contain digits
         $validator->add(
             'number',
             new Digit(
@@ -29,6 +31,7 @@ class Houses extends Model
             )
         );
 
+        //Validating 'street' field to not be null or empty
         $validator->add(
             'street',
             new PresenceOf(
@@ -39,6 +42,7 @@ class Houses extends Model
             )
         );
 
+        //Validating 'zipcode' field to not be null or empty
         $validator->add(
             'zipcode',
             new PresenceOf(
@@ -49,6 +53,7 @@ class Houses extends Model
             )
         );
 
+        //Validating 'city' field to not be null or empty
         $validator->add(
             'city',
             new PresenceOf(

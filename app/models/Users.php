@@ -17,10 +17,12 @@ class Users extends Model
     public $email;
     public $password;
 
+    //Adding validator for specific fields
     public function validation()
     {
         $validator = new Validation();
         
+        //Validating if the user type is of 'admin' or 'user'
         $validator->add(
             "user_type",
             new InclusionIn(
@@ -34,6 +36,7 @@ class Users extends Model
             )
         );
 
+        //Validating that there is no other user with the same email
         $validator->add(
             'email',
             new Uniqueness(
@@ -44,6 +47,7 @@ class Users extends Model
             )
         );
 
+        //Validating that the input has an 'email' specific structure
         $validator->add(
             'email',
             new Email(
@@ -54,6 +58,7 @@ class Users extends Model
             )
         );
 
+        //Validating that the 'name' field is not null or empty
         $validator->add(
             'name',
             new PresenceOf(
@@ -64,6 +69,7 @@ class Users extends Model
             )
         );
 
+        //Validating that the 'password' field is not null or empty
         $validator->add(
             'password',
             new PresenceOf(
