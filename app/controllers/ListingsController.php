@@ -30,16 +30,7 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
             $listings = Listings::find(); 
 
-            $houseController = new HousesController();
-            $housesData = $houseController -> getHousesAllAction();
-
-            $array = array();
-
-            for ($i = 0; $i < count($listings); $i++) {
-                $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
-                $elementOne = $listings[$i];
-                $array[] = $elementOne;
-            }
+            $array = $this->addHouseDataToListing($listings);
 
             // Set status code
             $response->setStatusCode(200, 'OK');
@@ -94,16 +85,7 @@ class ListingsController extends \Phalcon\Mvc\Controller
             $userId = $request->getQuery('id');
             $listings = Listings::find("user_id = '$userId'");
 
-            $houseController = new HousesController();
-            $housesData = $houseController -> getHousesAllAction();
-
-            $array = array();
-
-            for ($i = 0; $i < count($listings); $i++) {
-                $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
-                $elementOne = $listings[$i];
-                $array[] = $elementOne;
-            }
+            $array = $this->addHouseDataToListing($listings);
 
             // Set status code
             $response->setStatusCode(200, 'OK');
@@ -267,6 +249,21 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
         // Send response to the client
         $response->send();
+    }
+
+    private function addHouseDataToListing($listings){
+        $houseController = new HousesController();
+        $housesData = $houseController -> getHousesAllAction();
+
+        $array = array();
+
+        for ($i = 0; $i < count($listings); $i++) {
+            $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
+            $elementOne = $listings[$i];
+            $array[] = $elementOne;
+        }
+
+        return $array;
     }
 
     //admin
