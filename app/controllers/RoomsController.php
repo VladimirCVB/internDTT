@@ -117,7 +117,64 @@ class RoomsController extends \Phalcon\Mvc\Controller
         // Disable View File Content
         $this->view->disable();
 
-        //For now it is not required to update a room. I do not consider that outside of room_type, anything can be modified to a room, but in any case users may want to have this option so I will leave this function here for future use.
+        // Getting a response instance
+        // https://docs.phalcon.io/3.4/en/response.html
+        $response = new Response();
+
+        // Getting a request instance
+        // https://docs.phalcon.io/3.4/en/request
+        $request = new Request();
+
+        if ($request->isPut()) {
+
+            //Get the id of the house
+            $roomId = $request->getQuery('room_id');
+
+            //Find house by id
+            $room = Rooms::findFirst("id='$roomId'");
+
+            //Get the request data
+            $requestData = $request->getPut();
+
+            //Declare basic required data
+            $array = array("room_type", "width", "length", "height");
+
+            //Check if vars contain any data and update the house if data is passed from the form
+            foreach($array as $a){
+                if($requestData[$a] != '' || $requestData[$a] != null){
+                    $room->$a = $requestData[$a];
+                }
+            }
+
+            //Update the house in the database and check for errors
+            $success = $room->update();
+
+            //Save the message
+            if ($success) {
+                $message = "Successfully updated your room!";
+            } else {
+                $message = "Sorry, the following problems were generated:<br>"
+                        . implode('<br>', $house->getMessages());
+            }
+
+            // Set status code
+            $response->setStatusCode(200, 'OK');
+
+            // Set the content of the response
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $message ]);
+
+        } else {
+
+            // Set status code
+            $response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            // $response->setContent("Sorry, the page doesn't exist");
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
+        $response->send();
     }
 
     public function deleteAction()
