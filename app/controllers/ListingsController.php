@@ -28,19 +28,24 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
 
-            $query = $this
-                ->modelsManager
-                ->createQuery(
-                    'SELECT * FROM users'
-                    );
+            $listings = Listings::find(); 
 
-            $users = $query->execute();
+            $houseController = new HousesController();
+            $housesData = $houseController -> getHousesAllAction();
+
+            $array = array();
+
+            for ($i = 0; $i < count($listings); $i++) {
+                $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
+                $elementOne = $listings[$i];
+                $array[] = $elementOne;
+            }
 
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $users ]);
+            $response->setJsonContent(["status" => true, "error" => false, "listings" => $array]);
 
         } else {
 
@@ -85,14 +90,26 @@ class ListingsController extends \Phalcon\Mvc\Controller
             //         'id' => $userId,
             //     ]
             // );
+
             $userId = $request->getQuery('id');
-            $user = Users::findFirst("id = '$userId'");
+            $listings = Listings::find("user_id = '$userId'");
+
+            $houseController = new HousesController();
+            $housesData = $houseController -> getHousesAllAction();
+
+            $array = array();
+
+            for ($i = 0; $i < count($listings); $i++) {
+                $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
+                $elementOne = $listings[$i];
+                $array[] = $elementOne;
+            }
 
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $user ]);
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $array ]);
 
         } else {
 
@@ -124,27 +141,27 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isPost()) {
 
-            $user = new Users();
+            $listing = new Listings();
 
             //assign value from the form to $user
-            $user->assign(
+            $listing->assign(
                 $this->request->getPost(),
                 [
-                    'name',
-                    'email',
-                    'user_type',
-                    'password'
+                    'user_id',
+                    'house_id',
+                    'post_date',
+                    'active'
                 ]
             );
 
             // Store and check for errors
-            $success = $user->save();
+            $success = $listing->save();
 
             if ($success) {
-                $message = "Thanks for registering!";
+                $message = "Your listing was posted";
             } else {
                 $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $user->getMessages());
+                        . implode('<br>', $listing->getMessages());
             }
 
             // Set status code
@@ -183,17 +200,18 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isPut()) {
 
-            $user = Users::findFirst("id=2");
+            $listingId = $request->getQuery('id');
+            $listings = Listings::findFirst("id = '$listingId'");
 
-            $user->password = "Biomass";
+            $listings->active = 0;
 
-            $user->update();
+            $listings->update();
             
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $user->email ]);
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $listings ]);
 
         } else {
 
@@ -225,11 +243,11 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isDelete()) {
 
-            $user = Users::findFirst("id=1");
+            $listingId = $request->getQuery('id');
+            $listings = Listings::findFirst("id = '$listingId'");
 
-            $user->name = "Biomass";
-
-            $user->delete();
+            $listings->active = 0;
+            //call delete controllers fro house and room
             
             // Set status code
             $response->setStatusCode(200, 'OK');
