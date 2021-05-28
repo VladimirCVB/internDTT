@@ -142,24 +142,41 @@ class UsersController extends \Phalcon\Mvc\Controller
 
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isPut()) {
-
             //Get the id of the user
             $userId = $request->getQuery('id');
 
             //Find user by id
             $user = Users::findFirst("id='$userId'");
 
-            //Update user password
-            $userPasswordNew = $request->getQuery('password');
-            $user->password = $userPasswordNew;
+            //Get the request data
+            $requestData = $request->getPut();
 
-            $user->update();
+            //Declare basic required data street, number, addition, zipcode, city
+            $array = array("name", "password");
+
+            //Check if vars contain any data and update the house if data is passed from the form
+            foreach($array as $a){
+                if($requestData[$a] != '' || $requestData[$a] != null){
+                    $house->$a = $requestData[$a];
+                }
+            }
+
+            //Update the house in the database and check for errors
+            $success = $user->update();
+
+            //Save the message
+            if ($success) {
+                $message = "Successfully created your new room!";
+            } else {
+                $message = "Sorry, the following problems were generated:<br>"
+                        . implode('<br>', $user->getMessages());
+            }
             
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => 'Password updated!' ]);
+            $response->setJsonContent(["status" => true, "error" => false, "data" => $message ]);
 
         } else {
 
