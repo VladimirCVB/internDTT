@@ -28,8 +28,10 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
 
+            //Get all listings
             $listings = Listings::find(); 
 
+            //Add house data to listing by house_id
             $array = $this->addHouseDataToListing($listings);
 
             // Set status code
@@ -68,6 +70,7 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
 
+            //Manual SQL input code
             // $userId = $request->getPost();
             // $query     = $this
             //     ->modelsManager
@@ -82,9 +85,11 @@ class ListingsController extends \Phalcon\Mvc\Controller
             //     ]
             // );
 
+            //Get listings by user_id
             $userId = $request->getQuery('id');
             $listings = Listings::find("user_id = '$userId'");
 
+            //Add house data to listings by house_id
             $array = $this->addHouseDataToListing($listings);
 
             // Set status code
@@ -182,11 +187,16 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isPut()) {
 
+            //Get the id of the listing
             $listingId = $request->getQuery('id');
+
+            //Find the listing by id
             $listings = Listings::findFirst("id = '$listingId'");
 
+            //Set the listing to 'inactive' or active=false
             $listings->active = 0;
 
+            //Update the listing in the database
             $listings->update();
             
             // Set status code
@@ -225,17 +235,24 @@ class ListingsController extends \Phalcon\Mvc\Controller
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isDelete()) {
 
+            //Get the id of the listing
             $listingId = $request->getQuery('id');
+
+            //Find the listing by id
             $listings = Listings::findFirst("id = '$listingId'");
 
+            //Set the listing to 'inactive' or active=false
             $listings->active = 0;
-            //call delete controllers fro house and room
-            
+
+            //Delete house and room data from the database
+            $houseController = new HousesController();
+            $houseController -> deleteAction($listings->house_id);
+
             // Set status code
             $response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $user ]);
+            $response->setJsonContent(["status" => true, "error" => false, "data" => "Success" ]);
 
         } else {
 
@@ -252,11 +269,14 @@ class ListingsController extends \Phalcon\Mvc\Controller
     }
 
     private function addHouseDataToListing($listings){
-        $houseController = new HousesController();
-        $housesData = $houseController -> getHousesAllAction();
 
+        //Create new HousesController
+        $houseController = new HousesController();
+
+        //Decalre empty array to store data
         $array = array();
 
+        //Iterate through all listing and append matching house data by house_id
         for ($i = 0; $i < count($listings); $i++) {
             $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
             $elementOne = $listings[$i];
@@ -265,17 +285,5 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
         return $array;
     }
-
-    //admin
-    // public function getAllAction()
-    // {
-    //     return '<h1>Happy marriage</h1>';
-    // }
-
-    // public function getAllAction()
-    // {
-    //     return '<h1>Happy marriage</h1>';
-    // }
-
 }
 

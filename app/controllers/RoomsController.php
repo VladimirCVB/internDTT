@@ -177,7 +177,7 @@ class RoomsController extends \Phalcon\Mvc\Controller
         $response->send();
     }
 
-    public function deleteAction()
+    public function deleteAction($houseId)
     {
         // Disable View File Content
         $this->view->disable();
@@ -194,7 +194,6 @@ class RoomsController extends \Phalcon\Mvc\Controller
         if ($request->isDelete()) {
 
             //Get the room by house id
-            $houseId = $request->getQuery('house_id');
             $rooms = Rooms::find("house_id = '$houseId'");
 
             //Delete rooms from db
