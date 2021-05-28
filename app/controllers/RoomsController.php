@@ -12,7 +12,7 @@ use Phalcon\Mvc\Model\Manager;
 class RoomsController extends \Phalcon\Mvc\Controller
 {
 
-    public function getRoomAction()
+    public function getRoomAction($houseId)
     {
         // Disable View File Content
         $this->view->disable();
@@ -29,14 +29,11 @@ class RoomsController extends \Phalcon\Mvc\Controller
         if ($request->isGet()) {
 
             //Get the room by house id
-            $houseId = $request->getQuery('house_id');
-            $room = Rooms::findFirst("house_id = '$houseId'");
-
-            // Set status code
-            $response->setStatusCode(200, 'OK');
-
-            // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $room ]);
+            try{
+                $room = Rooms::find("house_id = '$houseId'");
+            } catch(Exception $e){
+                $room = null;
+            }
 
         } else {
 
@@ -49,7 +46,7 @@ class RoomsController extends \Phalcon\Mvc\Controller
         }
 
         // Send response to the client
-        $response->send();
+        return $room;
     }
 
     public function postAction()

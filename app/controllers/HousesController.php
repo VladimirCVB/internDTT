@@ -329,6 +329,5 @@ class HousesController extends \Phalcon\Mvc\Controller
         // Send response to the client
         return $house;
     }
-
 }
 

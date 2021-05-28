@@ -273,16 +273,33 @@ class ListingsController extends \Phalcon\Mvc\Controller
         //Create new HousesController
         $houseController = new HousesController();
 
+        //Create new HousesController
+        $roomsController = new RoomsController();
+
         //Decalre empty array to store data
         $array = array();
 
         //Iterate through all listing and append matching house data by house_id
         for ($i = 0; $i < count($listings); $i++) {
+            
+            //Adding house data to listing
             $listings[$i]->house_data = $houseController -> getHouseByIdAction($listings[$i]->house_id);
+
+            //Checking if any house data has been found for the listing
+            if($listings[$i]->house_data == null)
+            continue;
+            
+            //Adding room data to the house in the listing
+            $listings[$i]->house_data->rooms = $roomsController -> getRoomAction($listings[$i]->house_id);
+
+            //Saving changes to another variable
             $elementOne = $listings[$i];
+
+            //Adding the variable to an array
             $array[] = $elementOne;
         }
 
+        //Returning the listings with house and room data
         return $array;
     }
 }
