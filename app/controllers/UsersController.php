@@ -8,6 +8,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Manager;
+use Phalcon\Security;
 
 class UsersController extends \Phalcon\Mvc\Controller
 {
@@ -93,9 +94,17 @@ class UsersController extends \Phalcon\Mvc\Controller
                     'name',
                     'email',
                     'user_type',
-                    'password'
                 ]
             );
+
+            //Decalring the security variable
+            $security = new Security();
+
+            //Getting the password from the request
+            $password = $this->request->getPost('password', 'string');
+
+            //Hash password
+            $user->password = $this->security->hash($password);
 
             // Store and check for errors
             $success = $user->save();
