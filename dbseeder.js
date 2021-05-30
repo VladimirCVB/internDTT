@@ -44,7 +44,7 @@ const seed = new Seeder(
       "listings", 
       {
         user_id: faker.datatype.number(50),
-        house_id: faker.datatype.number(),
+        house_id: faker.datatype.number(150),
         post_date: seed.nativeTimestamp(),
         active: faker.datatype.number(0, 1),
         inactive_date: null,
