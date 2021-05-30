@@ -16,10 +16,12 @@ class Rooms extends Model
     public $length;
     public $height;
 
+    //Adding validator for specific fields
     public function validation()
     {
         $validator = new Validation();
         
+        //Validating that the room type is of the types in the specified array
         $validator->add(
             "room_type",
             new InclusionIn(
@@ -36,6 +38,7 @@ class Rooms extends Model
             )
         );
 
+        //Validating that the width only contains digits
         $validator->add(
             'width',
             new Digit(
@@ -46,6 +49,7 @@ class Rooms extends Model
             )
         );
 
+        //Validating that the width only contains digits
         $validator->add(
             'length',
             new Digit(
@@ -56,6 +60,7 @@ class Rooms extends Model
             )
         );
 
+        //Validating that the width only contains digits
         $validator->add(
             'height',
             new Digit(
