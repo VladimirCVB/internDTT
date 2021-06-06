@@ -112,17 +112,18 @@ class UsersController extends ControllerBase
             //Check if variables contain any data and update the user information if data is passed from the form
             foreach($propertiesToUpdate as $property => $pro){
                 if($this->requestData[$pro] != '' || $this->requestData[$pro] != null){
+
                     $user->$pro = $this->requestData[$pro];
-                }
 
-                //Find the password property
-                if ($property === array_key_last($propertiesToUpdate))
-                {
-                    //Decalring the security variable
-                    $security = new Security();
+                    //Find the password property
+                    if ($property === array_key_last($propertiesToUpdate))
+                    {
+                        //Decalring the security variable
+                        $security = new Security();
 
-                    //Hash the password
-                    $user->$pro = $this->security->hash($this->requestData[$pro]);
+                        //Hash the password
+                        $user->$pro = $this->security->hash($this->requestData[$pro]);
+                    }
                 }
             }
 
