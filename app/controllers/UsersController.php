@@ -51,6 +51,7 @@ class UsersController extends ControllerBase
                 [
                     'name',
                     'email',
+                    'password',
                     'user_type',
                 ]
             );

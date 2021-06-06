@@ -189,7 +189,7 @@ class HousesController extends ControllerBase
         if ($this->request->isDelete()) {
 
             //Get the house by id
-            $house = Houses::findFirst("id = '$houseId'");
+            $house = Houses::findFirstById($houseId);
 
             //Delete room data from the database
             $roomController = new RoomsController();
