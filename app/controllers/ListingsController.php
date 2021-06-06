@@ -32,7 +32,6 @@ class ListingsController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -40,7 +39,7 @@ class ListingsController extends ControllerBase
         $this->response->send();
     }
 
-    public function getAllFilterAction()
+    public function getByUserIdAction()
     {
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($this->request->isGet()) {
@@ -64,7 +63,6 @@ class ListingsController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -74,12 +72,13 @@ class ListingsController extends ControllerBase
 
     public function postAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method POST ( $this->request->isPost() )
         if ($this->request->isPost()) {
 
+            // Init new empty listing object
             $listing = new Listings();
 
-            //assign value from the form to $user
+            // Assign inputted values to new listing
             $listing->assign(
                 $this->request->getPost(),
                 [
@@ -112,7 +111,6 @@ class ListingsController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -122,14 +120,14 @@ class ListingsController extends ControllerBase
 
     public function putAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method PUT ( $this->request->isPut() )
         if ($this->request->isPut()) {
 
             //Get the id of the listing
             $listingId = $this->request->getQuery('id');
 
             //Find the listing by id
-            $listings = Listings::findFirst("id = '$listingId'");
+            $listings = Listings::findFirstById($listingId);
 
             //Set the listing to 'inactive' or active=false
             $listings->active = 0;
@@ -149,7 +147,6 @@ class ListingsController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -159,14 +156,14 @@ class ListingsController extends ControllerBase
 
     public function deleteAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method DELETE ( $this->request->isDelete() )
         if ($this->request->isDelete()) {
 
             //Get the id of the listing
             $listingId = $this->request->getQuery('id');
 
             //Find the listing by id
-            $listings = Listings::findFirst("id = '$listingId'");
+            $listings = Listings::findFirstById($listingId);
 
             //Set the listing to 'inactive' or active=false
             $listings->active = 0;
@@ -187,7 +184,6 @@ class ListingsController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
