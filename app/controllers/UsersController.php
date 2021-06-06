@@ -10,14 +10,11 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Security;
 
-class UsersController extends \Phalcon\Mvc\Controller
+class UsersController extends ControllerBase
 {
 
     public function getAllAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -28,22 +25,6 @@ class UsersController extends \Phalcon\Mvc\Controller
 
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
-
-            //Raw code
-
-            // $userId = $request->getPost();
-            // $query     = $this
-            //     ->modelsManager
-            //     ->createQuery(
-            //         'SELECT * FROM Users WHERE id = :id:'
-            //     )
-            // ;
-    
-            // $users = $query->execute(
-            //     [
-            //         'id' => $userId,
-            //     ]
-            // );
 
             //Request to get user by id
             $userId = $request->getQuery('id');
@@ -71,9 +52,6 @@ class UsersController extends \Phalcon\Mvc\Controller
 
     public function postAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -138,9 +116,6 @@ class UsersController extends \Phalcon\Mvc\Controller
 
     public function putAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -203,9 +178,6 @@ class UsersController extends \Phalcon\Mvc\Controller
 
     public function deleteAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();

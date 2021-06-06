@@ -9,14 +9,11 @@ use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Manager;
 
-class ListingsController extends \Phalcon\Mvc\Controller
+class ListingsController extends ControllerBase
 {
 
     public function getAllAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -56,9 +53,6 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
     public function getAllFilterAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -69,21 +63,6 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($request->isGet()) {
-
-            //Manual SQL input code
-            // $userId = $request->getPost();
-            // $query     = $this
-            //     ->modelsManager
-            //     ->createQuery(
-            //         'SELECT * FROM Users WHERE id = :id:'
-            //     )
-            // ;
-    
-            // $users = $query->execute(
-            //     [
-            //         'id' => $userId,
-            //     ]
-            // );
 
             //Get listings by user_id
             $userId = $request->getQuery('id');
@@ -114,9 +93,6 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
     public function postAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -173,9 +149,6 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
     public function putAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -221,9 +194,6 @@ class ListingsController extends \Phalcon\Mvc\Controller
 
     public function deleteAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();

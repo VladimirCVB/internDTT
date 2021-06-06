@@ -5,5 +5,11 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
 {
-    // Implement common logic
+    // Common logic
+
+    public function beforeExecuteRoute($dispatcher)
+    {
+        // Disable View File Content
+        $this->view->disable();
+    }
 }

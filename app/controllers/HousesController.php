@@ -9,13 +9,10 @@ use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Manager;
 
-class HousesController extends \Phalcon\Mvc\Controller
+class HousesController extends ControllerBase
 {
     public function getHouseAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -53,9 +50,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function getHousesAllAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -89,9 +83,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function getHousesAllResponseAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -127,9 +118,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function postAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -187,9 +175,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function putAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -253,9 +238,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function deleteAction($houseId)
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -299,9 +281,6 @@ class HousesController extends \Phalcon\Mvc\Controller
 
     public function getHouseByIdAction($id)
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();

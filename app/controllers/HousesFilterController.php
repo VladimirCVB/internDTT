@@ -9,14 +9,11 @@ use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Manager;
 
-class HousesFilterController extends \Phalcon\Mvc\Controller
+class HousesFilterController extends ControllerBase
 {
 
     public function getHouseFilterAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -54,9 +51,6 @@ class HousesFilterController extends \Phalcon\Mvc\Controller
 
     public function postAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
@@ -116,9 +110,6 @@ class HousesFilterController extends \Phalcon\Mvc\Controller
 
     public function deleteAction()
     {
-        // Disable View File Content
-        $this->view->disable();
-
         // Getting a response instance
         // https://docs.phalcon.io/3.4/en/response.html
         $response = new Response();
