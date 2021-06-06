@@ -188,28 +188,5 @@ class UsersController extends ControllerBase
         // Send response to the client
         $this->response->send();
     }
-
-    private function errorCheck($user)
-    {
-        // Store and check for errors
-        $success = $user->save();
-
-        // Set default message
-        $message = "Operation fully completed";
-
-        if(!$success)
-        {
-            $message = "Sorry, the following problems were generated:<br>"
-                    . implode('<br>', $user->getMessages());
-
-            // Set status code
-            $this->response->setStatusCode(400, 'Bad Request');
-
-            // Set response message
-            $this->response->setJsonContent(["status" => false, "error" => $message]);
-        }
-
-        return $message;
-    }
 }
 

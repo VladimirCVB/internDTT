@@ -101,14 +101,14 @@ class HousesController extends ControllerBase
                 ]
             );
 
-            // Store and check for errors
-            $success = $house->save();
-
-            if ($success) {
-                $message = "Successfully created your new house!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $house->getMessages());
+            //Update the house data in the database and check for errors
+            $message = $this->errorCheck($house);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code
@@ -154,15 +154,14 @@ class HousesController extends ControllerBase
                 }
             }
 
-            //Update the house in the database and check for errors
-            $success = $house->update();
-
-            //Save the message
-            if ($success) {
-                $message = "Successfully created your new room!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $house->getMessages());
+            //Update the house data in the database and check for errors
+            $message = $this->errorCheck($house);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
             
             // Set status code

@@ -55,14 +55,14 @@ class RoomsController extends ControllerBase
                 ]
             );
 
-            // Store and check for errors
-            $success = $room->save();
-
-            if ($success) {
-                $message = "Successfully created your new room!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $room->getMessages());
+            //Update the room data in the database and check for errors
+            $message = $this->errorCheck($room);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code
@@ -107,15 +107,14 @@ class RoomsController extends ControllerBase
                 }
             }
 
-            //Update the room in the database and check for errors
-            $success = $room->update();
-
-            //Save the message
-            if ($success) {
-                $message = "Successfully updated your room!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $house->getMessages());
+            //Update the room data in the database and check for errors
+            $message = $this->errorCheck($room);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code

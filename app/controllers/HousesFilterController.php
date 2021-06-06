@@ -14,15 +14,15 @@ class HousesFilterController extends ControllerBase
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($this->request->isGet()) {
 
-            //Get the room by house id
+            //Get the house_filter by house id
             $houseId = $this->request->getQuery('id');
-            $houseFIlter = Houses_filter::findFirst("house_id = '$houseId'");
+            $houseFilter = Houses_filter::findFirst("house_id = '$houseId'");
 
             // Set status code
             $this->response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $this->response->setJsonContent(["status" => true, "error" => false, "data" => $houseFIlter ]);
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => $houseFilter ]);
 
         } else {
 
@@ -30,7 +30,6 @@ class HousesFilterController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -40,13 +39,14 @@ class HousesFilterController extends ControllerBase
 
     public function postAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method POST ( $this->request->isPost() )
         if ($this->request->isPost()) {
 
-            $houseFIlter = new Houses_filter();
+            // Init empty house_filter object
+            $houseFilter = new Houses_filter();
 
-            //assign value from the form to $user
-            $houseFIlter->assign(
+            // Assign inputted data to empty object
+            $houseFilter->assign(
                 $this->request->getPost(),
                 [
                     'house_id',
@@ -59,14 +59,14 @@ class HousesFilterController extends ControllerBase
                 ]
             );
 
-            // Store and check for errors
-            $success = $houseFIlter->save();
-
-            if ($success) {
-                $message = "Successfully created your new room!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $houseFIlter->getMessages());
+            //Update the house filter data in the database and check for errors
+            $message = $this->errorCheck($houseFilter);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code
@@ -81,7 +81,6 @@ class HousesFilterController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -91,10 +90,10 @@ class HousesFilterController extends ControllerBase
 
     public function deleteAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method DELETE ( $this->request->isDelete() )
         if ($this->request->isDelete()) {
 
-            //Get the room by house id
+            //Get the house filter by house id
             $houseId = $this->request->getQuery('house_id');
             $houseFilter = Houses_filter::findFirst("house_id = '$houseId'");
 
@@ -113,7 +112,6 @@ class HousesFilterController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 

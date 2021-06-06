@@ -89,14 +89,14 @@ class ListingsController extends ControllerBase
                 ]
             );
 
-            // Store and check for errors
-            $success = $listing->save();
-
-            if ($success) {
-                $message = "Your listing was posted";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $listing->getMessages());
+            //Update the listing data in the database and check for errors
+            $message = $this->errorCheck($listing);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code
