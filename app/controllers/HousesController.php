@@ -105,7 +105,7 @@ class HousesController extends ControllerBase
             $success = $house->save();
 
             if ($success) {
-                $message = "Successfully created your new room!";
+                $message = "Successfully created your new house!";
             } else {
                 $message = "Sorry, the following problems were generated:<br>"
                         . implode('<br>', $house->getMessages());
