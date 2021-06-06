@@ -10,14 +10,14 @@ use Phalcon\Security;
 class UsersController extends ControllerBase
 {
 
-    public function getAllAction()
+    public function getUserByIdAction()
     {
         // Check whether the request was made with method GET ( $this->request->isGet() )
         if ($this->request->isGet()) {
 
             //Request to get user by id
             $userId = $this->request->getQuery('id');
-            $user = Users::findFirst("id = '$userId'");
+            $user = Users::findFirstById($userId);
 
             // Set status code
             $this->response->setStatusCode(200, 'OK');
@@ -31,7 +31,6 @@ class UsersController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -41,12 +40,12 @@ class UsersController extends ControllerBase
 
     public function postAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method POST ( $this->request->isPost() )
         if ($this->request->isPost()) {
 
             $user = new Users();
 
-            //assign value from the form to $user
+            //Assign value from the form to $user
             $user->assign(
                 $this->request->getPost(),
                 [
@@ -62,17 +61,17 @@ class UsersController extends ControllerBase
             //Getting the password from the request
             $password = $this->request->getPost('password', 'string');
 
-            //Hash password
+            //Hash the password
             $user->password = $this->security->hash($password);
 
-            // Store and check for errors
-            $success = $user->save();
+            //Save the user and check for errors
+            $message = $this->errorCheck($user);
 
-            if ($success) {
-                $message = "Thanks for registering!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $user->getMessages());
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
 
             // Set status code
@@ -87,7 +86,6 @@ class UsersController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -103,30 +101,39 @@ class UsersController extends ControllerBase
             $userId = $this->request->getQuery('id');
 
             //Find user by id
-            $user = Users::findFirst("id='$userId'");
+            $user = Users::findFirstById($userId);
 
             //Get the request data
             $this->requestData = $this->request->getPut();
 
-            //Declare basic required data street, number, addition, zipcode, city
-            $array = array("name", "password");
+            //Declare basic required data name and password
+            $propertiesToUpdate = array("name", "password");
 
-            //Check if vars contain any data and update the house if data is passed from the form
-            foreach($array as $a){
-                if($this->requestData[$a] != '' || $this->requestData[$a] != null){
-                    $house->$a = $this->requestData[$a];
+            //Check if variables contain any data and update the user information if data is passed from the form
+            foreach($propertiesToUpdate as $property => $pro){
+                if($this->requestData[$pro] != '' || $this->requestData[$pro] != null){
+                    $user->$pro = $this->requestData[$pro];
+                }
+
+                //Find the password property
+                if ($property === array_key_last($propertiesToUpdate))
+                {
+                    //Decalring the security variable
+                    $security = new Security();
+
+                    //Hash the password
+                    $user->$pro = $this->security->hash($this->requestData[$pro]);
                 }
             }
 
-            //Update the house in the database and check for errors
-            $success = $user->update();
-
-            //Save the message
-            if ($success) {
-                $message = "Successfully created your new room!";
-            } else {
-                $message = "Sorry, the following problems were generated:<br>"
-                        . implode('<br>', $user->getMessages());
+            //Update the user data in the database and check for errors
+            $message = $this->errorCheck($user);
+            
+            //If there were errors during the save process, the response will contain a message with all of the errors
+            if($message != "Operation fully completed")
+            {
+                $this->response->send();
+                return;
             }
             
             // Set status code
@@ -141,7 +148,6 @@ class UsersController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
@@ -151,14 +157,14 @@ class UsersController extends ControllerBase
 
     public function deleteAction()
     {
-        // Check whether the request was made with method GET ( $this->request->isGet() )
+        // Check whether the request was made with method DELETE ( $this->request->isDelete() )
         if ($this->request->isDelete()) {
 
             //Get the id of the user
             $userId = $this->request->getQuery('id');
 
             //Find user by id
-            $user = Users::findFirst("id='$userId'");
+            $user = Users::findFirstById($userId);
 
             //Delete user from db
             $user->delete();
@@ -175,12 +181,34 @@ class UsersController extends ControllerBase
             $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $this->response->setContent("Sorry, the page doesn't exist");
             $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
         // Send response to the client
         $this->response->send();
+    }
+
+    private function errorCheck($user)
+    {
+        // Store and check for errors
+        $success = $user->save();
+
+        // Set default message
+        $message = "Operation fully completed";
+
+        if(!$success)
+        {
+            $message = "Sorry, the following problems were generated:<br>"
+                    . implode('<br>', $user->getMessages());
+
+            // Set status code
+            $this->response->setStatusCode(400, 'Bad Request');
+
+            // Set response message
+            $this->response->setJsonContent(["status" => false, "error" => $message]);
+        }
+
+        return $message;
     }
 }
 
