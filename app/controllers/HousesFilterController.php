@@ -1,9 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use Phalcon\Http\Response;
-use Phalcon\Http\Request;
-use Phalcon\Di;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
@@ -14,53 +11,37 @@ class HousesFilterController extends ControllerBase
 
     public function getHouseFilterAction()
     {
-        // Getting a response instance
-        // https://docs.phalcon.io/3.4/en/response.html
-        $response = new Response();
-
-        // Getting a request instance
-        // https://docs.phalcon.io/3.4/en/request
-        $request = new Request();
-
         // Check whether the request was made with method GET ( $this->request->isGet() )
-        if ($request->isGet()) {
+        if ($this->request->isGet()) {
 
             //Get the room by house id
-            $houseId = $request->getQuery('id');
+            $houseId = $this->request->getQuery('id');
             $houseFIlter = Houses_filter::findFirst("house_id = '$houseId'");
 
             // Set status code
-            $response->setStatusCode(200, 'OK');
+            $this->response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $houseFIlter ]);
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => $houseFIlter ]);
 
         } else {
 
             // Set status code
-            $response->setStatusCode(405, 'Method Not Allowed');
+            $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $response->setContent("Sorry, the page doesn't exist");
-            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            // $this->response->setContent("Sorry, the page doesn't exist");
+            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
         // Send response to the client
-        $response->send();
+        $this->response->send();
     }
 
     public function postAction()
     {
-        // Getting a response instance
-        // https://docs.phalcon.io/3.4/en/response.html
-        $response = new Response();
-
-        // Getting a request instance
-        // https://docs.phalcon.io/3.4/en/request
-        $request = new Request();
-
         // Check whether the request was made with method GET ( $this->request->isGet() )
-        if ($request->isPost()) {
+        if ($this->request->isPost()) {
 
             $houseFIlter = new Houses_filter();
 
@@ -89,63 +70,55 @@ class HousesFilterController extends ControllerBase
             }
 
             // Set status code
-            $response->setStatusCode(200, 'OK');
+            $this->response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $message ]);
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => $message ]);
 
         } else {
 
             // Set status code
-            $response->setStatusCode(405, 'Method Not Allowed');
+            $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $response->setContent("Sorry, the page doesn't exist");
-            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            // $this->response->setContent("Sorry, the page doesn't exist");
+            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
         // Send response to the client
-        $response->send();
+        $this->response->send();
     }
 
     public function deleteAction()
     {
-        // Getting a response instance
-        // https://docs.phalcon.io/3.4/en/response.html
-        $response = new Response();
-
-        // Getting a request instance
-        // https://docs.phalcon.io/3.4/en/request
-        $request = new Request();
-
         // Check whether the request was made with method GET ( $this->request->isGet() )
-        if ($request->isDelete()) {
+        if ($this->request->isDelete()) {
 
             //Get the room by house id
-            $houseId = $request->getQuery('house_id');
+            $houseId = $this->request->getQuery('house_id');
             $houseFilter = Houses_filter::findFirst("house_id = '$houseId'");
 
             //Delete house from db
             $houseFilter->delete();
             
             // Set status code
-            $response->setStatusCode(200, 'OK');
+            $this->response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => 'House filter is no longer in the database' ]);
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => 'House filter is no longer in the database' ]);
 
         } else {
 
             // Set status code
-            $response->setStatusCode(405, 'Method Not Allowed');
+            $this->response->setStatusCode(405, 'Method Not Allowed');
 
             // Set the content of the response
-            // $response->setContent("Sorry, the page doesn't exist");
-            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            // $this->response->setContent("Sorry, the page doesn't exist");
+            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
 
         // Send response to the client
-        $response->send();
+        $this->response->send();
     }
 
 }

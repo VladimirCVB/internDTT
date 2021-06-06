@@ -10,6 +10,6 @@ class ControllerBase extends Controller
     public function beforeExecuteRoute($dispatcher)
     {
         // Disable View File Content
-        $this->view->disable();
+        $this->view->disable();      
     }
 }
