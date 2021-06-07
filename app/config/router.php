@@ -70,6 +70,11 @@ $router->addGet(
     'Users::getUserById'
 );
 
+$router->addGet(
+    '/users/{id}',
+    'Users::getUserById'
+);
+
 $router->addPost(
     '/users',
     'Users::post'
