@@ -148,24 +148,15 @@ class RoomsController extends ControllerBase
             foreach ($rooms as $room) {
                 $room->delete();
             }
-            
-            // Set status code
-            $this->response->setStatusCode(200, 'OK');
-
-            // Set the content of the response
-            $this->response->setJsonContent(["status" => true, "error" => false, "data" => 'Rooms are no longer present in the database' ]);
 
         } else {
 
-            // Set status code
-            $this->response->setStatusCode(405, 'Method Not Allowed');
-
-            // Set the content of the response
-            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            // Send status to HousesController
+            return false;
         }
 
-        // Send response to the client
-        $this->response->send();
+        // Send status to HousesController
+        return true;
     }
 
 }

@@ -165,18 +165,43 @@ class ListingsController extends ControllerBase
             //Find the listing by id
             $listings = Listings::findFirstById($listingId);
 
+            // Check if listing is active
+            $listingStatus = $listings->active;
+
+            //If listing is not active return, house and room data is already deleted
+            if($listingStatus == 0){
+                // Set status code
+                $this->response->setStatusCode(200, 'OK');
+
+                // Set the content of the response
+                $this->response->setJsonContent(["status" => true, "error" => false, "data" => "Listing already deleted from the database!" ]);
+
+                // Send response to the client
+                $this->response->send();
+
+                // End the function
+                return;
+            }
+
             //Set the listing to 'inactive' or active=false
             $listings->active = 0;
 
             //Delete house and room data from the database
             $houseController = new HousesController();
-            $houseController -> deleteAction($listings->house_id);
+            if(!$houseController -> deleteAction($listings->house_id))
+            {
+                // Set status code
+                $this->response->setStatusCode(500, 'OK');
+
+                // Set the content of the response
+                $this->response->setJsonContent(["status" => true, "error" => true, "data" => "Internal Error" ]);
+            }
 
             // Set status code
             $this->response->setStatusCode(200, 'OK');
 
             // Set the content of the response
-            $this->response->setJsonContent(["status" => true, "error" => false, "data" => "Success" ]);
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => "Listing deleted!" ]);
 
         } else {
 

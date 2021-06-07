@@ -193,28 +193,20 @@ class HousesController extends ControllerBase
 
             //Delete room data from the database
             $roomController = new RoomsController();
-            $roomController -> deleteAction($houseId);
+            if(!$roomController -> deleteAction($houseId))
+                return false;
 
             //Delete the house from the database
             $house->delete();
-            
-            // Set status code
-            $this->response->setStatusCode(200, 'OK');
-
-            // Set the content of the response
-            $this->response->setJsonContent(["status" => true, "error" => false, "data" => 'House is no longer in the database' ]);
 
         } else {
 
-            // Set status code
-            $this->response->setStatusCode(405, 'Method Not Allowed');
-
-            // Set the content of the response
-            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            // Send status to ListingsController
+            return false;
         }
 
-        // Send response to the client
-        $this->response->send();
+        // Send status to ListingsController
+        return true;
     }
 
     public function getHouseByIdAction($id)
