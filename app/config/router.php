@@ -67,7 +67,7 @@ $router->addPut(
 // Users Routes
 $router->addGet(
     '/users',
-    'Users::getUserById'
+    'Users::getAll'
 );
 
 $router->addGet(

@@ -10,6 +10,33 @@ use Phalcon\Security;
 class UsersController extends ControllerBase
 {
 
+    public function getAllAction()
+    {
+        // Check whether the request was made with method GET ( $this->request->isGet() )
+        if ($this->request->isGet()) {
+
+            //Request to get user by id
+            $users = Users::find();
+
+            // Set status code
+            $this->response->setStatusCode(200, 'OK');
+
+            // Set the content of the response
+            $this->response->setJsonContent(["status" => true, "error" => false, "data" => $users ]);
+
+        } else {
+
+            // Set status code
+            $this->response->setStatusCode(405, 'Method Not Allowed');
+
+            // Set the content of the response
+            $this->response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+        }
+
+        // Send response to the client
+        $this->response->send();
+    }
+
     public function getUserByIdAction()
     {
         // Check whether the request was made with method GET ( $this->request->isGet() )
