@@ -10,6 +10,11 @@ $router->addGet(
     'Houses::getHousesAllResponse'
 );
 
+$router->addGet(
+    '/houses/{id}',
+    'Houses::getHouse'
+);
+
 $router->addPost(
     '/houses',
     'Houses::post'
@@ -62,6 +67,11 @@ $router->addPut(
 // Users Routes
 $router->addGet(
     '/users',
+    'Users::getUserById'
+);
+
+$router->addGet(
+    '/users/{id}',
     'Users::getUserById'
 );
 
